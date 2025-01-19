@@ -1,6 +1,8 @@
 # Spritoglobin
 Spritoglobin is a sprite viewer for North American and European versions of Mario and Luigi: Bowser's Inside Story.
 
+![image](https://github.com/user-attachments/assets/4ec24ecf-9d40-448e-85a4-2e4aadc4853a)
+
 In order to install the required libraries, run this command on the project's root folder: `python3 -m pip install -r requirements.txt`
 
 In order to run the program, you can either use the included `run.bat` file on Windows, or run the following command on the root folder: `python3 main/main.py`

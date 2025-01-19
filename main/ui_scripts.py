@@ -753,10 +753,11 @@ class MainWindow(QtWidgets.QMainWindow):
                     case 9:  # matrix 4
                         current_sprite_part.matrix[4] = float(input_data)
                     case 10: # mouse input
-                        if (is_pressed('shift')):
+                        modifiers = QtGui.QGuiApplication.keyboardModifiers()
+                        if (QtCore.Qt.ShiftModifier in modifiers):
                             current_sprite_part.matrix[0] += input_data.x() / 20
                             current_sprite_part.matrix[4] += input_data.y() / 20
-                        elif (is_pressed('control')):
+                        elif (QtCore.Qt.ControlModifier in modifiers):
                             current_sprite_part.matrix[1] += input_data.x() / 20
                             current_sprite_part.matrix[3] += input_data.y() / 20
                         else:
@@ -1151,7 +1152,7 @@ class MainWindow(QtWidgets.QMainWindow):
             timer += 1
 
         os.makedirs('gif exports', exist_ok=True)
-        
+
         file_name = f'gif exports/{self.file_selector.currentText()}_group{int(self.sprite_group_selector.currentText(), 0):04x}_anim{self.anim_list_box.currentRow():04x}.gif'
         image_list[0].save(file_name, save_all = True, append_images = image_list[1:], optimize = True, duration = 20, loop = 0, disposal = 2)
 

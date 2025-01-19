@@ -3,7 +3,6 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from PIL.ImageQt import ImageQt
 from playsound import playsound
 from functools import partial
-from keyboard import is_pressed
 
 from classes import *
 

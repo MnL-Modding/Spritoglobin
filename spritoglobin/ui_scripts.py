@@ -1,17 +1,24 @@
-import os
-from PySide6 import QtCore, QtGui, QtWidgets
-from PIL.ImageQt import ImageQt
-from playsound import playsound
 from functools import partial
+import os
+from pathlib import Path
+import sys
 
-from classes import *
+import ndspy.rom
+from PySide6 import QtCore, QtGui, QtMultimedia, QtWidgets
+from PIL.ImageQt import ImageQt
+
+from spritoglobin.classes import *
+from spritoglobin.utils import *
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
 
         self.setWindowTitle("Spritoglobin")
-        self.setWindowIcon(QtGui.QIcon('files/spritoglobin.ico'))
+        self.setWindowIcon(QtGui.QIcon(str(FILES_DIR / 'spritoglobin.ico')))
+
+        self.gif_exported_sfx = QtMultimedia.QSoundEffect(self)
+        self.gif_exported_sfx.setSource(QtCore.QUrl.fromLocalFile(FILES_DIR / "special_attack_piece_jingle.wav"))
 
         # the widget that controls which graphics file to view
         self.file_selector = QtWidgets.QComboBox()
@@ -439,27 +446,34 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(widget)
 
 
-        for file in os.listdir("files"):
-            if file.endswith(".nds"):
-                rom = import_files.ndspy.rom.NintendoDSRom.fromFile("files/" + file)
-                if rom.name == bytearray("MARIO&LUIGI3", 'utf-8') and (rom.idCode[3] == 69 or rom.idCode[3] == 80):
-                    rom_name = file
-        
-        try:
-            path = "files/" + rom_name
-        except:
-            dlg = QtWidgets.QMessageBox(self)
-            dlg.setWindowTitle("Choose a ROM")
-            dlg.setText("Please choose a North American or European Bowser's Inside Story ROM to open.\n\nAlternatively, put a Bowser's Inside Story ROM in the program's 'files' directory to skip this prompt next time the program is opened.")
-            dlg.exec()
+        rom_path = None
+        for file in Path().glob('*.nds'):
+            rom = ndspy.rom.NintendoDSRom.fromFile(file)
+            if rom.name == b"MARIO&LUIGI3" and rom.idCode[3] in [69, 80]:
+                if rom_path is not None:
+                    QtWidgets.QMessageBox.warning(
+                        self,
+                        "Multiple ROMs detected!",
+                        f"Multiple ROMs were detected in the current directory!\n\nUsing: '{rom_path}'"
+                    )
+                    break
+                rom_path = file
 
-            path, h = QtWidgets.QFileDialog.getOpenFileName(
-                parent=self,  # or None if the main window doesn't exist yet
+        if rom_path is None:
+            QtWidgets.QMessageBox.information(
+                self,
+                "Choose a ROM",
+                f"Please choose a North American or European Bowser's Inside Story ROM to open.\n\nAlternatively, put a Bowser's Inside Story ROM in the current directory to skip this prompt next time the program is opened.",
+            )
+            rom_path, _selected_filter = QtWidgets.QFileDialog.getOpenFileName(
+                parent=self,
                 caption="Open ROM",
                 filter="NDS ROMs (*.nds);;All Files (*)",
             )
-        finally:
-            import_files.import_files(path)
+            if rom_path == '':
+                sys.exit(2)
+
+        import_files.import_files(rom_path)
 
     def update_sprite_group_selector(self):
         #print("update_sprite_group_selector")
@@ -682,7 +696,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.sprite_transform_canvas.fill(QtCore.Qt.GlobalColor.gray)
         qp = QtGui.QPainter(self.sprite_transform_canvas)
 
-        tex = Image.open("files/missing texture.png")
+        tex = MISSING_TEXTURE
         tex = ImageOps.scale(tex, 2, 0)
 
         img = Image.new("RGBA", (64, 64))
@@ -895,7 +909,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 tile_x = current_tile.x_size
                 tile_y = current_tile.y_size
             else:
-                img = Image.open("files/missing texture.png")
+                img = MISSING_TEXTURE
                 tile_x = 16
                 tile_y = 16
             tile_scale = 1
@@ -921,7 +935,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.part_transform_canvas.fill(QtCore.Qt.GlobalColor.gray)
         qp = QtGui.QPainter(self.part_transform_canvas)
 
-        tex = Image.open("files/missing texture.png")
+        tex = MISSING_TEXTURE
         tex = ImageOps.scale(tex, 2, 0)
 
         img = Image.new("RGBA", (64, 64))
@@ -994,7 +1008,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
             qimg = ImageQt(img)
             qp.drawImage(int(sprite_part_x_offset), int(sprite_part_y_offset), qimg)
-        except:
+        except Exception:
             print("tile display error in tile view!")
         finally:
             qp.end()
@@ -1036,7 +1050,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
             qpal = ImageQt(pal)
             qp.drawImage(0, 0, qpal)
-        except:
+        except Exception:
             print("palette display error in tile view!")
         finally:
             qp.end()
@@ -1155,13 +1169,14 @@ class MainWindow(QtWidgets.QMainWindow):
         file_name = f'gif exports/{self.file_selector.currentText()}_group{int(self.sprite_group_selector.currentText(), 0):04x}_anim{self.anim_list_box.currentRow():04x}.gif'
         image_list[0].save(file_name, save_all = True, append_images = image_list[1:], optimize = True, duration = 20, loop = 0, disposal = 2)
 
-        playsound("files/special_attack_piece_jingle.mp3", False)
+        self.gif_exported_sfx.play()
 
-        dlg = QtWidgets.QMessageBox(self)
-        dlg.setWindowTitle("GIF Exported")
-        dlg.setText("GIF successfully exported!\n\nThe file has been placed in the program's 'gif exports' directory.")
-        dlg.exec()
-    
+        QtWidgets.QMessageBox.information(
+            self,
+            "GIF Exported",
+            "GIF successfully exported!\n\nThe file has been placed in the 'gif exports' directory.",
+        )
+
 class DraggableQLabel(QtWidgets.QLabel):
     mouseDragged = QtCore.Signal(QtCore.QPoint)
     mouseReleased = QtCore.Signal()

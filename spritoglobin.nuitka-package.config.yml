@@ -1,0 +1,4 @@
+- module-name: "spritoglobin"
+  data-files:
+    dirs:
+      - "files"

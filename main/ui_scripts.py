@@ -1149,6 +1149,9 @@ class MainWindow(QtWidgets.QMainWindow):
             # image_list.append(sprite_list_out[current_frame.sprite_index]) # for the funny version of the export
 
             timer += 1
+
+        if not os.path.exists('gif exports'):
+            os.makedirs('gif exports')
         
         file_name = f'gif exports/{self.file_selector.currentText()}_group{int(self.sprite_group_selector.currentText(), 0):04x}_anim{self.anim_list_box.currentRow():04x}.gif'
         image_list[0].save(file_name, save_all = True, append_images = image_list[1:], optimize = True, duration = 20, loop = 0, disposal = 2)

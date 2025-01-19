@@ -1,0 +1,8 @@
+keyboard>=0.13.5
+ndspy>=4.1.0
+Pillow>=11.1.0
+playsound>=1.2.2
+PySide6>=6.8.0.2
+PySide6_Addons>=6.8.0.2
+PySide6_Essentials>=6.8.0.2
+git+https://github.com/MnL-Modding/mnllib.py

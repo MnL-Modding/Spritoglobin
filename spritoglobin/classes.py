@@ -1,8 +1,9 @@
 import io
+
 import mnllib
 
-from data_scripts import *
-import import_files
+from spritoglobin.data_scripts import *
+from spritoglobin import import_files
 
 class SpriteGroup: # not fully understood
     def __init__(self, input_data, sprite_type):
@@ -629,22 +630,17 @@ class AnimationData:
                                     current_frame.collision_group_ext = self.current_collision.box_group_list[current_collision_data[3] - 1].box_data
                 case 1: #FCollision
                     current_collision_data = self.current_collision.header.header_data
-                    for i in range(len(self.all_anims)):
+                    for i in range(max(len(self.all_anims), len(current_collision_data))):
                         current_anim = self.all_anims[i]
                         for current_frame in current_anim.frame_list:
-                            try:
-                                current_collision_data[i]
-                            except:
-                                ...
-                            else:
-                                current_frame.collision_group = []
-                                current_frame.collision_group_ext = []
-                                for j in range(3):
-                                    if current_collision_data[i][j] != 255:
-                                        current_frame.collision_group.append(self.current_collision.box_group_list[j].box_data[current_collision_data[i][j]],)
-                                for j in range(2):
-                                    if current_collision_data[i][j + 3] != 255:
-                                        current_frame.collision_group_ext.append(self.current_collision.box_group_list[j].box_data[current_collision_data[i][j + 3]],)
+                            current_frame.collision_group = []
+                            current_frame.collision_group_ext = []
+                            for j in range(3):
+                                if current_collision_data[i][j] != 255:
+                                    current_frame.collision_group.append(self.current_collision.box_group_list[j].box_data[current_collision_data[i][j]],)
+                            for j in range(2):
+                                if current_collision_data[i][j + 3] != 255:
+                                    current_frame.collision_group_ext.append(self.current_collision.box_group_list[j].box_data[current_collision_data[i][j + 3]],)
 
         # create a list of sprite parts
         self.all_parts = []

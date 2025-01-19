@@ -1,5 +1,6 @@
-from ui_scripts import *
-from sys import argv
+import sys
+
+from spritoglobin.ui_scripts import *
 
 # files that work so far:
 # BObjMap           YES
@@ -43,11 +44,15 @@ from sys import argv
 # FMapData
 # MMap
 
-app = QtWidgets.QApplication(argv)
+def main():
+    app = QtWidgets.QApplication(sys.argv)
 
-window = MainWindow()
-window.show()
+    window = MainWindow()
+    window.show()
 
-window.update_sprite_group_selector()
+    window.update_sprite_group_selector()
 
-app.exec()
+    sys.exit(app.exec())
+
+if __name__ == '__main__':
+    main()

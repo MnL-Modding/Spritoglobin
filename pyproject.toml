@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "spritoglobin"
+version = "0.1.0"
+description = "Sprite viewer for Mario & Luigi: Bowser's Inside Story."
+authors = ["Marc (ThePurpleAnon)"]
+license = "GPL-3.0-or-later"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.14"
+pyside6 = "6.8.0.2"
+mnllib = { git = "https://github.com/MnL-Modding/mnllib.py.git", branch = "v1" }
+ndspy = "^4.1.0"
+pillow = "^11.1.0"
+
+[tool.poetry.group.dev.dependencies]
+nuitka = "^2.5.6"
+
+[tool.poetry.scripts]
+spritoglobin = "spritoglobin:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,6 +1,9 @@
 import struct
 from math import ceil, floor
+
 from PIL import Image, ImageOps, ImageTransform, ImageEnhance
+
+from spritoglobin.utils import *
 
 def create_sprite_part(buffer_in, current_pal, part_x, part_y, sprite_mode, pal_shift, swizzle, translucent_flag):
     if (swizzle):
@@ -13,7 +16,7 @@ def create_sprite_part(buffer_in, current_pal, part_x, part_y, sprite_mode, pal_
         tiles = 1
     img_out = Image.new("RGBA", (part_x, part_y))
     for t in range(tiles):
-        buffer_out = bytearray([])
+        buffer_out = bytearray()
         match (sprite_mode):
             case 0:
                 # 8bpp bitmap
@@ -66,7 +69,7 @@ def create_assembled_sprite(size, part_list, all_tiles, highlighted_part_index):
             tile_x = current_tile.x_size
             tile_y = current_tile.y_size
         else:
-            img_part = Image.open("files/missing texture.png")
+            img_part = MISSING_TEXTURE
             tile_x = 16
             tile_y = 16
 
@@ -195,9 +198,9 @@ def define_collision_box(ext, coll_type, input_collision, center, scalar):
                 z_size  = -current_box[3] * scalar
 
                 start_y = (0 + center[1]) * scalar
-                try:
+                if len(current_box) > 4:
                     y_size  = (-current_box[4]) * scalar
-                except:
+                else:
                     y_size = 0
 
                 return_data0.append((start_x, start_y, x_size, y_size))

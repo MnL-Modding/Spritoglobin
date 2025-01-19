@@ -1,1 +1,1 @@
-python3 main/main.py
+python3 -m spritoglobin

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "spritoglobin"
-version = "0.1.0"
+version = "0.1.1"
 description = "Sprite viewer for Mario & Luigi: Bowser's Inside Story."
 authors = ["Marc (ThePurpleAnon)"]
 license = "GPL-3.0-or-later"

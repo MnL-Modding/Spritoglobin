@@ -630,7 +630,7 @@ class AnimationData:
                                     current_frame.collision_group_ext = self.current_collision.box_group_list[current_collision_data[3] - 1].box_data
                 case 1: #FCollision
                     current_collision_data = self.current_collision.header.header_data
-                    for i in range(max(len(self.all_anims), len(current_collision_data))):
+                    for i in range(min(len(self.all_anims), len(current_collision_data))):
                         current_anim = self.all_anims[i]
                         for current_frame in current_anim.frame_list:
                             current_frame.collision_group = []

@@ -8,7 +8,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.12,<3.14"
-pyside6 = "6.8.0.2"
+pyside6 = "^6.8.2.1"
 mnllib = { git = "https://github.com/MnL-Modding/mnllib.py.git", branch = "v0.2" }
 ndspy = "^4.1.0"
 pillow = "^11.1.0"

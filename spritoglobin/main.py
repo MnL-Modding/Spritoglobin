@@ -30,6 +30,7 @@ from spritoglobin.ui_scripts import *
 # Fcollision files  NO
 
 # files to work on after all those are done:
+# arm9
 # EObjSR
 # BRfx
 # FRfx

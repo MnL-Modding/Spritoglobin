@@ -1,6 +1,6 @@
 import io
 
-import mnllib
+import mnllib.bis as mnllib
 
 from spritoglobin.data_scripts import *
 from spritoglobin import import_files

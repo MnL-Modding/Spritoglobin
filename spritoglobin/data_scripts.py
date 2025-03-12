@@ -121,10 +121,11 @@ def create_assembled_sprite(size, part_list, all_tiles, highlighted_part_index):
 
 def define_palette_color(current_pal):
     color_raw = int.from_bytes(current_pal.read(2), "little")
-    red = (color_raw & 0x1F) << 3
-    green = (color_raw >> 5 & 0x1F) << 3
-    blue = (color_raw >> 10 & 0x1F) << 3
-    return [red, green, blue]
+    return_color = []
+    for i in range(3):
+        x = color_raw >> (i * 5) & 0x1F
+        return_color.append((x << 3) | (x >> 2))
+    return return_color
 
 def interpret_matrix(buffer_in, matrix_type = 0):
     out = [1, 0, 0, 0, 1, 0]

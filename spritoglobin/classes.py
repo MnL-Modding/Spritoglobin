@@ -1,6 +1,6 @@
 import io
 
-import mnllib.bis as mnllib
+import mnllib.bis
 
 from spritoglobin.data_scripts import *
 from spritoglobin import import_files
@@ -523,14 +523,14 @@ class AnimationData:
         self.overlay_file_offsets.seek(self.filedata + 4 + (self.sprite_group_data.animation_file * 4))
         animation_file_offset = int.from_bytes(self.overlay_file_offsets.read(4), "little")
         self.file_in.seek(animation_file_offset)
-        self.current_anim.write(mnllib.decompress(self.file_in))
+        self.current_anim.write(mnllib.bis.decompress(self.file_in))
 
         # save the current graphics file
         tex_buffer = io.BytesIO()
         self.overlay_file_offsets.seek(self.filedata + 4 + (self.sprite_group_data.graphics_file * 4))
         graphics_file_offset = int.from_bytes(self.overlay_file_offsets.read(4), "little")
         self.file_in.seek(graphics_file_offset)
-        tex_buffer.write(mnllib.decompress(self.file_in))
+        tex_buffer.write(mnllib.bis.decompress(self.file_in))
         tex_buffer.seek(0)
         tex_size = int.from_bytes(tex_buffer.read(4), "little")
         self.current_tex = io.BytesIO()

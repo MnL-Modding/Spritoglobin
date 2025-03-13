@@ -123,8 +123,9 @@ def define_palette_color(current_pal):
     color_raw = int.from_bytes(current_pal.read(2), "little")
     return_color = []
     for i in range(3):
-        x = color_raw >> (i * 5) & 0x1F
-        return_color.append((x << 3) | (x >> 2))
+        x = color_raw >> (i * 5) & 0x1F               # 15 bit color
+        x = (x << 1) + min(x, 1)                      # 18 bit color
+        return_color.append((x << 2) | (x >> 4))      # 24 bit color
     return return_color
 
 def interpret_matrix(buffer_in, matrix_type = 0):

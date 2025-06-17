@@ -17,8 +17,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.setWindowTitle("Spritoglobin")
         self.setWindowIcon(QtGui.QIcon(str(FILES_DIR / 'spritoglobin.ico')))
 
-        self.gif_exported_sfx = QtMultimedia.QSoundEffect(self)
-        self.gif_exported_sfx.setSource(QtCore.QUrl.fromLocalFile(FILES_DIR / "special_attack_piece_jingle.wav"))
+        self.success_sfx = QtMultimedia.QSoundEffect(self)
+        self.success_sfx.setSource(QtCore.QUrl.fromLocalFile(FILES_DIR / "spritoglobin_success.wav"))
+        self.success_sfx.setVolume(0.3)
 
         # the widget that controls which graphics file to view
         self.file_selector = QtWidgets.QComboBox()
@@ -1169,9 +1170,8 @@ class MainWindow(QtWidgets.QMainWindow):
         file_name = f'gif exports/{self.file_selector.currentText()}_group{int(self.sprite_group_selector.currentText(), 0):04x}_anim{self.anim_list_box.currentRow():04x}.gif'
         image_list[0].save(file_name, save_all = True, append_images = image_list[1:], optimize = True, duration = 20, loop = 0, disposal = 2)
 
-        self.gif_exported_sfx.play()
-
-        QtWidgets.QMessageBox.information(
+        self.success_sfx.play()
+        QtWidgets.QMessageBox.about(
             self,
             "GIF Exported",
             "GIF successfully exported!\n\nThe file has been placed in the 'gif exports' directory.",
